@@ -1,6 +1,1 @@
-/**
- * EditorJSRelation block for the Editor.js.
- *
- * @author Vishal Telangre
- * @license MIT
- */
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */

@@ -1,10 +1,6 @@
 require('./index.scss').toString();
 
 import ToolboxIcon from '../assets/icon.svg';
-import SettingsIcon from '../assets/settings-icon.svg';
-import AlignLeftIcon from '../assets/align-left-icon.svg';
-import AlignCenterIcon from '../assets/align-center-icon.svg';
-import AlignRightIcon from '../assets/align-right-icon.svg';
 
 export default class EditorJSRelation {
   static get toolbox() {
@@ -21,6 +17,9 @@ export default class EditorJSRelation {
   constructor({ data, config, api, readOnly }) {
     this.api = api;
     this.readOnly = readOnly;
+    this.typeOptions = [];
+
+    this.getOptions();
 
     this.data = {
       relation: data.relation || '',
@@ -28,40 +27,43 @@ export default class EditorJSRelation {
     };
   }
 
-  render() {
-    const container = this._make('div');
+  async getOptions() {
+    const username = 'itsmeskm99@gmail.com';
+    const password = 'Testing123#';
 
-    let typeOptions = [];
-    const sessionId = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('session='))
-      .split('=')[1];
-    const auth = btoa(encoder.encode(data));
+    try {
+      const response = await fetch(
+        'https://university-backend-develop-nuwg4.ondigitalocean.app/api/v1/quizzes/',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Basic ' + window.btoa(username + ':' + password),
+          },
+        }
+      );
+      const data = await response.json();
 
-    fetch(
-      'https://university-backend-develop-nuwg4.ondigitalocean.app/api/v1/quizzes/',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Basic ${auth}`,
-        },
+      const options = data.results.map((item) => item.slug);
+      this.typeOptions = options;
+
+      // Re-render the select element with the updated options
+      const typeSelect = this._makeSelect(this.typeOptions, this.data.relation);
+      const container = document.getElementById('skm-select-outer-container');
+      if (container) {
+        container.innerHTML = '';
+        container.appendChild(typeSelect);
       }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // Add each type to the typeOptions array
-        data?.results?.forEach((type) => {
-          typeOptions.push(type.title);
-        });
-      })
-      .catch((error) => {
-        console.error('Error fetching types:', error);
-      });
+    } catch (error) {
+      console.error('Error getting options:', error);
+    }
+  }
 
-    const typeSelect = this._makeSelect(typeOptions, this.data.relation);
+  render() {
+    const container = this._make('div', null, {
+      id: 'skm-select-outer-container',
+    });
 
-    container.appendChild(typeSelect);
+    container.textContent = 'Loading...';
 
     return container;
   }
