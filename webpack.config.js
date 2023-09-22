@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = (env, argv) => {
   const { mode } = argv;
 
@@ -31,12 +33,27 @@ module.exports = (env, argv) => {
       ],
     },
     output: {
-      path: __dirname + '/dist',
+      path: __dirname + '/public/dist',
       publicPath: '/',
       filename: mode === 'production' ? 'bundle.js' : `${mode}.bundle.js`,
-      library: 'Alert',
+      library: 'EditorJSRelation',
       libraryTarget: 'umd',
       libraryExport: 'default',
+    },
+
+    devServer: {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods':
+          'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers':
+          'X-Requested-With, content-type, Authorization',
+      },
+      static: {
+        directory: path.join(__dirname, 'public'),
+      },
+      compress: true,
+      port: 9000,
     },
   };
 };

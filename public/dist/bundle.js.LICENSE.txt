@@ -1,0 +1,6 @@
+/**
+ * EditorJSRelation block for the Editor.js.
+ *
+ * @author Vishal Telangre
+ * @license MIT
+ */
