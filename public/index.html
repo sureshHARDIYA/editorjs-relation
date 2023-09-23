@@ -12,10 +12,15 @@
         const editor = new EditorJS({
           autofocus: true,
           tools: {
-            image: EditorJSRelation
+            relation: {
+              class: EditorJSRelation,
+              inlineToolbar: true,
+              config: {
+                placeholder: 'Header'
+              },
+            }
           }
         });
     </script>
-    fucking me
 </body>
 </html>

@@ -5,6 +5,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: './src/index.js',
+    watch: true,
     module: {
       rules: [
         {

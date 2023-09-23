@@ -10,10 +10,6 @@ export default class EditorJSRelation {
     };
   }
 
-  static get DEFAULT_MESSAGE_PLACEHOLDER() {
-    return 'Type here...';
-  }
-
   constructor({ data, config, api, readOnly }) {
     this.api = api;
     this.readOnly = readOnly;
@@ -30,6 +26,10 @@ export default class EditorJSRelation {
   async getOptions() {
     const username = 'itsmeskm99@gmail.com';
     const password = 'Testing123#';
+
+    if (Array.isArray(this.typeOptions) && this.typeOptions.length > 0) {
+      return this.typeOptions;
+    }
 
     try {
       const response = await fetch(
@@ -48,10 +48,15 @@ export default class EditorJSRelation {
 
       // Re-render the select element with the updated options
       const typeSelect = this._makeSelect(this.typeOptions, this.data.relation);
-      const container = document.getElementById('skm-select-outer-container');
-      if (container) {
-        container.innerHTML = '';
-        container.appendChild(typeSelect);
+      const containers = document.getElementsByClassName(
+        'skm-select-outer-container'
+      );
+
+      if (containers && containers.length > 0) {
+        for (let i in containers) {
+          containers[i].innerHTML = '';
+          containers[i].appendChild(typeSelect);
+        }
       }
     } catch (error) {
       console.error('Error getting options:', error);
@@ -59,10 +64,9 @@ export default class EditorJSRelation {
   }
 
   render() {
-    const container = this._make('div', null, {
-      id: 'skm-select-outer-container',
-    });
+    const container = this._make('div', 'skm-select-outer-container');
 
+    console.log(this.api, this.config);
     container.textContent = 'Loading...';
 
     return container;
